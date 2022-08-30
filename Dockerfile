@@ -1,4 +1,6 @@
 FROM continuumio/miniconda3
+#https://pythonspeed.com/articles/activate-conda-dockerfile/
+
 RUN apt-get update
 
 RUN mkdir /workspace
@@ -14,6 +16,7 @@ SHELL ["conda", "run", "-n", "py39", "/bin/bash", "-c"]
 
 COPY ./rabbitmq /app/rabbitmq
 # Demonstrate the environment is activated:
+
 RUN echo "Make sure pika is installed:"
 RUN python -c "import pika"
 

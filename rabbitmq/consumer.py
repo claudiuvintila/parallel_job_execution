@@ -17,7 +17,16 @@ logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
 
 
 class Consumer:
-    def __init__(self, exchange, queue=None, routing_key=None, host='localhost', username='guest', password='guest'):
+    def __init__(self,
+                 exchange,
+                 queue=None,
+                 routing_key=None,
+                 host='localhost',
+                 username='guest',
+                 password='guest',
+                 auto_delete_exchange=False,
+                 auto_delete_queue=True
+                 ):
         self.threads = []
         self.host = host
         self.exchange = exchange
@@ -37,8 +46,8 @@ class Consumer:
             exchange_type=ExchangeType.direct,
             passive=False,
             durable=True,
-            auto_delete=False)
-        self.channel.queue_declare(queue=self.queue, auto_delete=True, durable=True)
+            auto_delete=auto_delete_exchange)
+        self.channel.queue_declare(queue=self.queue, auto_delete=auto_delete_queue, durable=True)
         self.channel.queue_bind(
             queue=self.queue, exchange=self.exchange, routing_key=self.routing_key)
         # Note: prefetch is set to 1 here as an example only and to keep the number of threads created
@@ -101,4 +110,3 @@ if __name__ == "__main__":
         password=os.environ['RABBITMQ_PASSWORD']
     )
     consumer.start()
-
